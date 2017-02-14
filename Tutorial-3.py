@@ -1,4 +1,4 @@
-'''Implementation of Interval Tree'''
+'''Implementation of Interval Tree by augmenting BST'''
 class Interval(object):
 	'''Implementation of Interval data-type'''
 	def __init__(self, low, high):
@@ -44,6 +44,62 @@ def search(node, interval):
 
 	return search(node.r_child, interval)
 
+def delete(node, interval):
+	if node is None :
+		return node
+
+	#Search the node to be deleted
+	if interval.low < node.i.low :
+		node.l_child = delete(node.l_child, interval)
+
+	elif interval.low > node.i.low :
+		node.r_child = delete(node.r_child, interval)
+		
+	#Got the node, now delete
+	else :
+		#If node has only one or zero child
+		if node.l_child is None :
+			temp = node.r_child
+			node = None
+			return temp
+
+		elif node.r_child is None :
+			temp = node.l_child
+			node = None
+			return temp
+
+		#If node has two children
+		temp = minValueNode(node.r_child)
+		node.i = temp.i
+		node.r_child = delete(node.r_child, temp.i)
+	#Update max
+	node = maxUpdate(node)
+	return node
+
+#Utility functions
+def minValueNode(node):
+	current = node
+	while current.l_child is not None:
+		current = current.l_child
+	return current
+
+def maxUpdate(node):
+	if node is None:
+		return
+	maxUpdate(node.l_child)
+	maxUpdate(node.r_child)
+	if node.r_child is not None :
+		if node.l_child is not None :
+			node.max = max(node.l_child.max, node.r_child.max, node.i.high)
+		else :
+			node.max = max(node.r_child.max, node.i.high)
+	else :
+		if node.l_child is not None :
+			node.max = max(node.l_child.max, node.i.high)
+		else :
+			node.max = node.i.high
+	return node
+
 def inorder(node):
 	if node is None:
 		return
@@ -58,15 +114,21 @@ def checkOverlap(i1, i2):
 	return False
 
 def main():
-	intervals = [Interval(0,3), Interval(5,8), Interval(26,26), Interval(25,30),\
-	 Interval(15,23), Interval(19,20), Interval(17,19), Interval(8,9)]
+	#TO-DO : Add a figure of the tree
+	intervals = [Interval(15,23), Interval(5,8), Interval(0,3), Interval(8,9), Interval(19,20),\
+	 Interval(17,19), Interval(25,30)]
 	root = None
 	for i in intervals:
 		root = insert(root, i)
 	inorder(root)
+	print ("Search interval (6,10)")
 	search(root, Interval(6,10))
-
+	print ("After deleting interval (25,30)")
+	root = delete(root, Interval(25,30))
+	inorder(root)
+	print ("After deleting interval (15,23)")
+	root = delete(root, Interval(15,23))
+	inorder(root)
+	
 if __name__ == '__main__':
-	main()
-		
-		
+	main()	
