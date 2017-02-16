@@ -1,4 +1,5 @@
 '''Implementation of Interval Tree by augmenting BST'''
+
 class Interval(object):
 	'''Implementation of Interval data-type'''
 	def __init__(self, low, high):
@@ -17,34 +18,44 @@ class Node(object):
 
 def insert(node, interval):
 	'''Similar to BST insert keyed on low endpoint of intervals'''
+	#If tree is empty, make a new node
 	if node is None:
 		return Node(interval)
-
+	
+	#key less than current value, insert in left subtree
+	#else insert in right subtree
 	if interval.low < node.i.low :
 		node.l_child = insert(node.l_child, interval)
 	else :
 		node.r_child = insert(node.r_child, interval)
-
+		
+	#update max
 	if node.max < interval.high :
 		node.max = interval.high
 
 	return node
 
 def search(node, interval):
+	#Base case : tree is empty
 	if node is None :
 		raise KeyError('Error, interval not in the tree')
-
+		
+	#Base case 2 : check for overlap
 	if checkOverlap(node.i, interval):
 		print "Overlap found at [",node.i.low, node.i.high,"]"
 		return
-
+	
+	#If non-empty left child has larger max than low endpoint of the interval
+	#search in left subtree
 	if node.l_child is not None:
 		if node.l_child.max >= interval.low:
 			return search(node.l_child, interval)
 
+	#else search in right subtree
 	return search(node.r_child, interval)
 
 def delete(node, interval):
+	#Base case : tree is empty
 	if node is None :
 		return node
 
@@ -69,7 +80,8 @@ def delete(node, interval):
 			return temp
 
 		#If node has two children
-		temp = minValueNode(node.r_child)
+		#find its successor in its inorder traversal and replace it
+		temp = find_successor(node.r_child)
 		node.i = temp.i
 		node.r_child = delete(node.r_child, temp.i)
 	#Update max
@@ -77,7 +89,7 @@ def delete(node, interval):
 	return node
 
 #Utility functions
-def minValueNode(node):
+def find_successor(node):
 	current = node
 	while current.l_child is not None:
 		current = current.l_child
@@ -109,12 +121,12 @@ def inorder(node):
 	inorder(node.r_child)
 
 def checkOverlap(i1, i2):
+	#check if the given two intervals overlap
 	if (i1.low <= i2.high) & (i2.low <= i1.high):
 		return True
 	return False
 
 def main():
-	#TO-DO : Add a figure of the tree
 	intervals = [Interval(15,23), Interval(5,8), Interval(0,3), Interval(8,9), Interval(19,20),\
 	 Interval(17,19), Interval(25,30)]
 	root = None
