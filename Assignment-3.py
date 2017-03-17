@@ -6,7 +6,7 @@ class Graph:
         self.V= vertices #No. of vertices
         self.edges = [] #List to store edges of the graph
         
-    # function to add an edge to graph
+    #function to add an edge to graph
     def addEdge(self,u,v,w):
         self.edges.append([u, v, w])
     
@@ -45,9 +45,9 @@ class Graph:
         for i in range(self.V - 1):
             self.relax(self.edges, dist, predecessor)
  
-		#Check for negative cycles
+	#Check for negative cycles
         for u, v, w in self.edges:
-                if dist[u] != float("Inf") and dist[u] + w < dist[v]:
+                if dist[u] != sys.maxsize and dist[u] + w < dist[v]:
                         print ("Graph contains negative weight cycle")
                         return
                         
