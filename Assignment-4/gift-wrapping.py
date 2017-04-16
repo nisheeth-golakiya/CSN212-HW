@@ -1,4 +1,5 @@
 import numpy as np
+import time
 
 # Function to know if we have a counter-clockwise turn
 def CCW(p1, p2, p3):
@@ -30,12 +31,15 @@ def GiftWrapping(S):
 
 def main():
 	
-	P = np.array([(0,3),(1,1),(2,1),(0,0),(2,2),(3,0),(3,3)])
+	P = np.array([(np.random.randint(0,300),np.random.randint(0,300)) for i in range(50)])
+	start = time.clock()
 	L = GiftWrapping(P)
+	end = time.clock()
 	
-	#Print the answer
 	for l in L:
 		print(l)
+		
+	print "Time consumed: ", end - start
 
 if __name__ == '__main__':
-  main()
+    main()
