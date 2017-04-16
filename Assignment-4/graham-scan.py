@@ -1,4 +1,5 @@
 import numpy as np
+import time
 
 # Function to know if we have a CCW turn
 def RightTurn(p1, p2, p3):
@@ -29,10 +30,14 @@ def GrahamScan(P):
 def main():
 
 	P = [(np.random.randint(0,300),np.random.randint(0,300)) for i in range(50)]
+	start = time.clock()
 	L = GrahamScan(P)
+	end = time.clock()
 	
 	for l in L:
 		print(l)
+		
+	print ("Time consumed: ", end - start)
 
 if __name__ == '__main__':
 	main()
