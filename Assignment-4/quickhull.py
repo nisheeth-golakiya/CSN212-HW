@@ -100,5 +100,8 @@ def Ymin(A):
     return C
 
 if __name__=="__main__":
-    A=[[2,5],[4,8],[1,8],[2,3],[1,5],[5,9],[8,16],[12,7]]
+    A=[[np.random.randint(0,300),np.random.randint(0,300)] for i in range(20)]
+    start = time.clock()
     c = quickhull(A,5)
+    end = time.clock()
+    print "Time consumed:",end - start
